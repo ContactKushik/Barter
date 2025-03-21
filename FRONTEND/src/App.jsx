@@ -1,31 +1,38 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthStatus,  logoutUser} from "./redux/authSlice";
+import { checkAuthStatus, logoutUser } from "./redux/authSlice";
 import Login from "./components/Login";
 import { Button } from "@/components/ui/button";
 import { ToastContainer } from "react-toastify";
+
 const App = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-// const { isAuthenticated, user } = useSelector((state) => state.auth);
-const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  dispatch(checkAuthStatus()).finally(() => setLoading(false)); // Set loading to false after auth check
-}, [dispatch]);
-
-
-
+  // Single useEffect for authentication check
   useEffect(() => {
-    dispatch(checkAuthStatus()); // Check login status on app load
+    const checkAuth = async () => {
+      try {
+        await dispatch(checkAuthStatus());
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkAuth();
   }, [dispatch]);
-if (loading) {
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" alt="Loading..." className="w-16 h-16" />
-    </div>
-  );
-}
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" alt="Loading..." className="w-16 h-16" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center mt-10">
       <ToastContainer />
