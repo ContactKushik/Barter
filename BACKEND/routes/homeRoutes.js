@@ -104,6 +104,7 @@ router.post(
         images: uploadedImages, // Store Cloudinary URLs in DB
         location: req.body.location,
         user: req.user.id,
+        price:req.body.price,
       });
 
       const savedAd = await newAd.save();

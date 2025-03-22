@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
   const { loading, error } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
@@ -20,13 +22,14 @@ const Login = () => {
 
     if (result.meta.requestStatus === "fulfilled") {
       toast.success("Login Successful!");
+      navigate("/"); // Redirect to /home on successful login
     } else {
       toast.error(result.payload || "Login failed");
     }
   };
 
   return (
-    <Card className="w-96 mx-auto mt-10 p-5">
+    <Card className="w-96 mx-auto mt-10 p-5 absolute z-20 ">
       <h2 className="text-xl font-bold mb-4">Login</h2>
       <form onSubmit={handleLogin}>
         <Input

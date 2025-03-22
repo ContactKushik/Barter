@@ -36,8 +36,6 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await axiosInstance.post("/auth/logout"); // API call to destroy session/cookie
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       return true; // Indicate successful logout
     } catch (error) {
       return rejectWithValue("Logout failed");
