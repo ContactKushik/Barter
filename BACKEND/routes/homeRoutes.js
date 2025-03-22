@@ -7,11 +7,37 @@ import sharp from "sharp";
 
 const router = express.Router();
 
+// router.get("/", async (req, res) => {
+//   // console.log("HAA FETCH KRNE KE LIYE GYA MEIN");
+//   try {
+//     // Fetch all the ads in the database
+//     let ads = await Ad.find();
+//     res.send({
+//       status: "success",
+//       data: ads,
+//     });
+//   } catch (error) {
+//     res.status(500).send({
+//       status: "failed",
+//       message: "Error fetching ads",
+//       error: error.message,
+//     });
+//   }
+// });
+
 router.get("/", async (req, res) => {
-  // console.log("HAA FETCH KRNE KE LIYE GYA MEIN");
   try {
-    // Fetch all the ads in the database
-    let ads = await Ad.find();
+    // Get the page and limit from query parameters (default to 1 and 20)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    // Calculate the number of items to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch ads from the database with pagination
+    const ads = await Ad.find().skip(skip).limit(limit);
+
+    // Return the ads (no need for pagination info)
     res.send({
       status: "success",
       data: ads,
@@ -25,10 +51,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+// USER KI ID SE NIKALNE KE LIYE USKE SAARE ADS
+router.get("/:user_id", async (req, res) => {
   try {
     console.log(req.params.id);
-    const ad = await Ad.find({ user: req.params.id }); // Use findOne with a query
+    const ad = await Ad.find({ user: req.params.user_id }); // Use findOne with a query
 
     if (!ad) {
       return res
@@ -44,6 +71,26 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
+
+router.get("/ad_id/:ad_id",async(req,res)=>{
+  try {
+    // console.log(req.params.id);
+    const ad = await Ad.findById(req.params.ad_id); // Corrected to use the parameter directly
+    console.log()
+    if (!ad) {
+      return res
+        .status(404)
+        .send({ status: "failed", message: "Ad not found" });
+    }
+    res.send({ status: "success", data: ad });
+  } catch (error) {
+    res.status(500).send({
+      status: "failed",
+      message: "Error fetching ad",
+      error: error.message,
+    });
+  }
+})
 
 router.get("/ping", (req, res) => {
   res.send({
@@ -105,6 +152,7 @@ router.post(
         location: req.body.location,
         user: req.user.id,
         price:req.body.price,
+        category:req.body.category,
       });
 
       const savedAd = await newAd.save();

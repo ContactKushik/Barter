@@ -27,7 +27,7 @@ const AdCard = ({ ad }) => {
   const { title, location, images, price, date } = ad;
 
   return (
-    <div className="bg-white border shadow-sm overflow-hidden w-64 relative h-65">
+    <div className="bg-white border shadow-sm overflow-hidden w-64 relative h-65 transition-transform transform hover:scale-105">
       {/* Favorite Button */}
       <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
         <Heart className="w-5 h-5 text-gray-600" />

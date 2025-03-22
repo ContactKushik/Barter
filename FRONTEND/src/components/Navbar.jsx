@@ -24,6 +24,10 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleSellClick = () => {
+    navigate("/createAd"); // Navigate to the create ad page
+  };
+
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
       <div className="text-lg font-bold">BARTER</div>
@@ -31,8 +35,8 @@ const Navbar = () => {
         {isAuthenticated ? (
           <>
             <span className="mr-4">Welcome, {user.name}</span>
-            <Button className="mr-2">Sell</Button>
-            <Button onClick={handleLogoutClick}>Logout</Button>
+            <Button className="mr-2 hover:bg-gray-700 text-lg" onClick={handleSellClick}>Sell</Button>
+            <Button onClick={handleLogoutClick} className="hover:bg-red-700 text-lg">Logout</Button>
           </>
         ) : (
           <Button onClick={handleLoginClick} disabled={loading}>

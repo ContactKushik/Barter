@@ -36,7 +36,7 @@ export const createAd = createAsyncThunk(
   "ads/createAd",
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/ads/create", formData, {
+      const response = await axiosInstance.post("/home/create", formData, {
         headers: { "Content-Type": "multipart/form-data" }, // Required for file uploads
       });
       return response.data.data;

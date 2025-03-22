@@ -11,7 +11,8 @@ const adSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   date: { type: Date, default: Date.now },
   status: { type: String, enum: ["active", "sold"], default: "active" },
-  price: { type: Number, required: true } // Price in rupees
+  price: { type: Number, required: true }, // Price in rupees
+  category: { type: String, required: true }, // Category of the ad
 });
 
 const Ad = mongoose.model("Ad", adSchema);

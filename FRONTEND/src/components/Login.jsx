@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <Card className="w-96 mx-auto mt-10 p-5 absolute z-20 ">
+    <Card className="w-96 mx-auto mt-10 p-5 h-full z-20 ">
       <h2 className="text-xl font-bold mb-4">Login</h2>
       <form onSubmit={handleLogin}>
         <Input
