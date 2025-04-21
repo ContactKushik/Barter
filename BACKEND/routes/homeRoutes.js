@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
 // USER KI ID SE NIKALNE KE LIYE USKE SAARE ADS
 router.get("/:user_id", async (req, res) => {
   try {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     const ad = await Ad.find({ user: req.params.user_id }); // Use findOne with a query
 
     if (!ad) {
@@ -76,7 +76,7 @@ router.get("/ad_id/:ad_id",async(req,res)=>{
   try {
     // console.log(req.params.id);
     const ad = await Ad.findById(req.params.ad_id); // Corrected to use the parameter directly
-    console.log()
+    // console.log()
     if (!ad) {
       return res
         .status(404)
@@ -104,7 +104,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   upload.array("images", 3), // Allow up to 3 images
   async (req, res) => {
-    console.log("HAA CREATE CHALA");
+    // console.log("HAA CREATE CHALA");
     try {
       if (!req.user) {
         return res.status(401).send({

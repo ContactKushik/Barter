@@ -24,7 +24,7 @@ router.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
   getUser
-);
+);  
 
 export default router;
 

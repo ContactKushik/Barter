@@ -6,7 +6,7 @@ dotenv.config();
 
 const cookieExtractor = (req) => {
   if (req && req.cookies) {
-    console.log(req.cookies.onboarding);
+    // console.log(req.cookies.onboarding);
     return req.cookies.onboarding; // Extract the "onboarding" cookie (not "token")
   }
   return null;
@@ -25,7 +25,7 @@ const configurePassport = (passport) => {
         // Find the user associated with the token payload
         const user = await userModel.findById(payload.id)
           .select("-password");
-          console.log(user);
+          // console.log(user);
         if (!user) {
           return done(null, false, { message: "User not found" });
         }

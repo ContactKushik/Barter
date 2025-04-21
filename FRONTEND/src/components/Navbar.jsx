@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { checkAuthStatus, logoutUser } from "@/redux/authSlice";
+import { logoutUser } from "@/redux/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  const [loading, setLoading] = useState(true); // Track loading state
-
-  useEffect(() => {
-    dispatch(checkAuthStatus()).finally(() => setLoading(false)); // Set loading to false after auth check
-  }, [dispatch]);
-
   const handleLoginClick = () => {
-    navigate("/login"); // Navigate to the login page
+    navigate("/login");
   };
 
   const handleLogoutClick = () => {
@@ -25,31 +19,36 @@ const Navbar = () => {
   };
 
   const handleSellClick = () => {
-    navigate("/createAd"); // Navigate to the create ad page
+    navigate("/createAd");
   };
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
-      <div className="text-lg font-bold">BARTER</div>
+      <div
+        className="text-lg font-bold cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        BARTER
+      </div>
       <div>
         {isAuthenticated ? (
           <>
-            <span className="mr-4">Welcome, {user.name}</span>
-            <Button className="mr-2 hover:bg-gray-700 text-lg" onClick={handleSellClick}>Sell</Button>
-            <Button onClick={handleLogoutClick} className="hover:bg-red-700 text-lg">Logout</Button>
+            <span className="mr-4">Welcome, {user?.name}</span>
+            <Button
+              className="mr-2 hover:bg-gray-700 text-lg"
+              onClick={handleSellClick}
+            >
+              Sell
+            </Button>
+            <Button
+              onClick={handleLogoutClick}
+              className="hover:bg-red-700 text-lg"
+            >
+              Logout
+            </Button>
           </>
         ) : (
-          <Button onClick={handleLoginClick} disabled={loading}>
-            {loading ? (
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921"
-                alt="Loading..."
-                className="w-5 h-5 inline"
-              />
-            ) : (
-              "Login"
-            )}
-          </Button>
+          <Button onClick={handleLoginClick}>Login</Button>
         )}
       </div>
     </nav>

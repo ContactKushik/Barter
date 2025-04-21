@@ -7,6 +7,7 @@ export const fetchAds = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/home");
+      console.log(response.data.data);
       return response.data.data; // Extract ads from response
     } catch (error) {
       return rejectWithValue(
