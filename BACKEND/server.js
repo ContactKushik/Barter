@@ -10,8 +10,8 @@ import db from "./config/mongoose.js";
 import configurePassport from "./config/passport.js";
 import passport from "passport";
 import { createServer } from "http";
-
-import initSocket from "./sockets/socketHandler.js"; // ✅ new
+import chatRoutes from "./routes/chatRoutes.js";
+import initSocket from "./sockets/sockethandler.js"; // ✅ new
 
 const app = express();
 const httpServer = createServer(app);
@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 });
 app.use("/home", homeRoutes);
 app.use("/auth", authRoutes);
-
+app.use("/chat", chatRoutes);
 // Socket.IO Setup
 initSocket(httpServer); // ✅ Injecting the HTTP server
 

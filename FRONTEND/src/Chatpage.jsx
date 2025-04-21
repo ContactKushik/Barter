@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, Send } from "lucide-react"
 
-const Chatpage = ({ socket }) => {
+const Chatpage = () => {
   const [chats] = useState([
     {
       id: 1,
@@ -49,38 +49,12 @@ const Chatpage = ({ socket }) => {
   const [selectedChat, setSelectedChat] = useState(null)
   const [newMessage, setNewMessage] = useState("")
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("receive_message", (messageData) => {
-        // Handle incoming messages
-        console.log("Received message:", messageData);
-      });
-    }
-
-    return () => {
-      if (socket) {
-        socket.off("receive_message");
-      }
-    };
-  }, [socket]);
-
   const handleChatSelect = (chat) => {
     setSelectedChat(chat)
-    if (socket) {
-      socket.emit("join_room", chat.id);
-    }
   }
 
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedChat || !socket) return
-
-    const messageData = {
-      roomId: selectedChat.id,
-      text: newMessage,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    socket.emit("send_message", messageData);
+    if (!newMessage.trim() || !selectedChat) return
 
     const updatedChats = chats.map(chat => {
       if (chat.id === selectedChat.id) {
@@ -91,7 +65,7 @@ const Chatpage = ({ socket }) => {
             {
               text: newMessage,
               sender: "me",
-              time: messageData.time
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
           ],
           lastMessage: newMessage,

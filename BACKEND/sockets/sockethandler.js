@@ -2,6 +2,8 @@ import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import userModel from "../models/users.js";
+import Message from "../models/message.js";
+import Chat from "../models/chat.js"; // Optional, if needed
 
 export default function initSocket(httpServer) {
   const io = new Server(httpServer, {
@@ -12,9 +14,8 @@ export default function initSocket(httpServer) {
     },
   });
 
-  // JWT authentication middleware for sockets
+  // JWT middleware for socket authentication
   io.use(async (socket, next) => {
-    // console.log(socket);
     try {
       const cookies = socket.handshake.headers.cookie;
       const parsedCookies = cookie.parse(cookies || "");
@@ -27,7 +28,7 @@ export default function initSocket(httpServer) {
 
       if (!user) return next(new Error("User not found"));
 
-      socket.user = user; // Attach user to socket
+      socket.user = user;
       next();
     } catch (err) {
       console.error("Socket auth error:", err.message);
@@ -36,21 +37,46 @@ export default function initSocket(httpServer) {
   });
 
   io.on("connection", (socket) => {
-    console.log("User connected:", socket.user?.email || socket.user?._id);
+    console.log("✅ User connected:", socket.user?.email || socket.user?._id);
 
-    
+    // Join a chat room
+    socket.on("join_room", (roomId) => {
+      socket.join(roomId);
+      console.log(`User ${socket.user._id} joined room ${roomId}`);
+    });
 
-    socket.on("send_message", (data) => {
+    // Send message
+    socket.on("send_message", async (data) => {
+      const { roomId, content } = data;
+
       const messageData = {
-        ...data,
+        chat: roomId,
         sender: socket.user._id,
+        content,
         timestamp: new Date(),
       };
-      io.to(data.roomId).emit("receive_message", messageData);
+
+      try {
+        // Save to DB
+        const savedMessage = await Message.create(messageData);
+
+        // Emit to room
+        io.to(roomId).emit("receive_message", {
+          ...messageData,
+          _id: savedMessage._id,
+          sender: {
+            _id: socket.user._id,
+            name: socket.user.name,
+          },
+        });
+      } catch (err) {
+        console.error("Message sending error:", err.message);
+        socket.emit("error_message", "Message could not be sent");
+      }
     });
 
     socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.user?._id);
+      console.log("❌ User disconnected:", socket.user?._id);
     });
   });
 }

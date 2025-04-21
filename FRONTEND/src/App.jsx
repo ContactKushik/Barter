@@ -17,6 +17,7 @@
   import BarterListing from "./BarterListing";
   import Chatpage from "./Chatpage";
   import { io } from "socket.io-client";
+import ChatPage from "./Chatpage";
 
   const App = () => {
     const dispatch = useDispatch();
@@ -78,8 +79,15 @@
           <Route path="/ad/:ad_id" element={<BarterListing />} />
           <Route
             path="/chats"
-            element={isAuthenticated ? <Chatpage socket={socket} /> : <Navigate to="/login" />}
+            element={
+              isAuthenticated ? (
+                <Chatpage socket={socket} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
+          <Route path="/chat/:chatId" element={<ChatPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         <Footer />
